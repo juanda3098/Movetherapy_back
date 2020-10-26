@@ -100,7 +100,7 @@ router.get("/cedula/:cedulaPaciente", (req, res) => {
 // (Crea una nuevo paciente)
 router.post("/registro", (req, res) => {
   console.log(req.body);
-  var json = req.body;
+  var json = req.body.createPatient;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;

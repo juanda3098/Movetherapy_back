@@ -26,4 +26,3 @@ app.use("/cita", require("./routes/cita.js"));
 app.use("/sesion", require("./routes/sesion.js"));
 app.use("/rutina_ejercicio", require("./routes/sesion.js"));
 app.use("/user", require("./routes/user.js"));
-
