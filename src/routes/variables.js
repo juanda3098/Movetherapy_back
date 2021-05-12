@@ -3,5 +3,5 @@ module.exports = {
   user: "root",
   pass: "root",
   db: "movetherapy",
-  port: 3306
+  port: 3306,
 };

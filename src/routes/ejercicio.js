@@ -31,7 +31,6 @@ router.get("/lista", (req, res) => {
           throw error;
         } else {
           tempConn.release();
-          console.log(result);
           res.send(result);
         }
       });
@@ -57,7 +56,6 @@ router.get("/descripcion/:descripcion", (req, res) => {
             throw error;
           } else {
             tempConn.release();
-            console.log(result);
             res.send(result);
           }
         }
@@ -72,23 +70,28 @@ router.get("/descripcion/:descripcion", (req, res) => {
 
 // (Crea una nuevo ejercicio)
 router.post("/registro", (req, res) => {
-  console.log(req.body);
-  var json = req.body;
+  var json = req.body.ejercicio;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "INSERT INTO ejercicio (linkVideo, descripcionEjercicio) VALUES (?, ?)",
-        [json.linkVideo, json.descripcionEjercicio],
+        "INSERT INTO ejercicio (nombreEjercicio, descripcionEjercicio, linkVideo, seriesEjercicio, repeticionesEjercicio) VALUES (?, ?, ?, ?, ?)",
+        [
+          json.nombreEjercicio,
+          json.descripcionEjercicio,
+          json.linkVideo,
+          json.seriesEjercicio,
+          json.repeticionesEjercicio,
+        ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -102,23 +105,29 @@ router.post("/registro", (req, res) => {
 
 // (Actualiza la informacion de un ejercicio)
 router.post("/editar", (req, res) => {
-  console.log(req.body);
-  var json = req.body;
+  var json = req.body.ejercicio;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "UPDATE ejercicio SET linkVideo = ?, descripcionEjercicio = ? WHERE idFisioterapeuta = ?",
-        [json.linkVideo, json.descripcionEjercicio, json.idFisioterapeuta],
+        "UPDATE ejercicio SET nombreEjercicio = ?, descripcionEjercicio = ?, linkVideo = ?, seriesEjercicio = ?, repeticionesEjercicio = ? WHERE idEjercicio = ?",
+        [
+          json.nombreEjercicio,
+          json.descripcionEjercicio,
+          json.linkVideo,
+          json.seriesEjercicio,
+          json.repeticionesEjercicio,
+          json.idEjercicio,
+        ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -142,11 +151,11 @@ router.delete("/id/:idEjercicio", (req, res) => {
         `DELETE FROM ejercicio WHERE idEjercicio = ${id}`,
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );

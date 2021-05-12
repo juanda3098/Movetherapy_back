@@ -31,37 +31,9 @@ router.get("/lista", (req, res) => {
           throw error;
         } else {
           tempConn.release();
-          console.log(result);
           res.send(result);
         }
       });
-    }
-  });
-});
-
-// (Retorna a un paciente por nombre)
-router.get("/nombre/:nombrePaciente", (req, res) => {
-  connection.getConnection(function (error, tempConn) {
-    var nombre = req.params.nombrePaciente;
-    if (error) {
-      console.log(error);
-      throw error;
-    } else {
-      console.log("Conexión Exitoso");
-      tempConn.query(
-        `SELECT * FROM paciente WHERE Paciente.nombrePaciente = ${nombre}`,
-        function (error, result) {
-          if (error) {
-            console.log(error);
-            res.send("Error Query");
-            throw error;
-          } else {
-            tempConn.release();
-            console.log(result);
-            res.send(result);
-          }
-        }
-      );
     }
   });
 });
@@ -99,15 +71,15 @@ router.get("/cedula/:cedulaPaciente", (req, res) => {
 
 // (Crea una nuevo paciente)
 router.post("/registro", (req, res) => {
-  console.log(req.body);
-  var json = req.body.actionPatient;
+  var json = req.body.paciente;
   connection.getConnection(function (error, tempConn) {
     if (error) {
+      res.send("failed");
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "INSERT INTO paciente (cedulaPaciente, nombre1Paciente, nombre2Paciente, apellido1Paciente, apellido2Paciente, celularPaciente, correoPaciente, contrasenaPaciente, fechaNacimientoPaciente, practicaDeporte) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO paciente (cedulaPaciente, nombre1Paciente, nombre2Paciente, apellido1Paciente, apellido2Paciente, celularPaciente, telefonoPaciente, correoPaciente, contrasenaPaciente, fechaNacimientoPaciente, practicaDeporte) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           json.cedulaPaciente,
           json.nombre1Paciente,
@@ -115,6 +87,7 @@ router.post("/registro", (req, res) => {
           json.apellido1Paciente,
           json.apellido2Paciente,
           json.celularPaciente,
+          json.telefonoPaciente,
           json.correoPaciente,
           json.contrasenaPaciente,
           json.fechaNacimientoPaciente,
@@ -122,11 +95,11 @@ router.post("/registro", (req, res) => {
         ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -140,7 +113,6 @@ router.post("/registro", (req, res) => {
 
 // (Actualiza la informacion de un paciente)
 router.post("/editar", (req, res) => {
-  console.log(req.body);
   var json = req.body.actionPatient;
   connection.getConnection(function (error, tempConn) {
     if (error) {
@@ -148,9 +120,8 @@ router.post("/editar", (req, res) => {
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "UPDATE paciente SET cedulaPaciente = ?, nombre1Paciente = ?, nombre2Paciente = ?, apellido1Paciente = ?, apellido2Paciente = ?, celularPaciente = ?, telefonoPaciente = ?, correoPaciente = ?, contrasenaPaciente = ?, fechaNacimientoPaciente = ?, practicaDeporte = ? WHERE idPaciente = ?",
+        "UPDATE paciente SET nombre1Paciente = ?, nombre2Paciente = ?, apellido1Paciente = ?, apellido2Paciente = ?, celularPaciente = ?, telefonoPaciente = ?, correoPaciente = ?, contrasenaPaciente = ?, fechaNacimientoPaciente = ?, practicaDeporte = ? WHERE cedulaPaciente = ?",
         [
-          json.cedulaPaciente,
           json.nombre1Paciente,
           json.nombre2Paciente,
           json.apellido1Paciente,
@@ -161,15 +132,15 @@ router.post("/editar", (req, res) => {
           json.contrasenaPaciente,
           json.fechaNacimientoPaciente,
           json.practicaDeporte,
-          json.idPaciente,
+          json.cedulaPaciente,
         ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -193,11 +164,11 @@ router.delete("/cedula/:cedulaPaciente", (req, res) => {
         `DELETE FROM paciente WHERE cedulaPaciente = ${cedula}`,
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );

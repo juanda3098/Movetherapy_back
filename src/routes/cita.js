@@ -31,8 +31,12 @@ router.get("/lista", (req, res) => {
           throw error;
         } else {
           tempConn.release();
-          console.log(result);
-          res.send(result);
+          var jsonResult = ""
+          result.forEach(function (date, index) {
+            date = { ...date, start: `${date.fechaCita}T${date.horaCita}` }
+            jsonResult = {...jsonResult, date}
+          });
+          res.send(jsonResult);
         }
       });
     }
@@ -73,23 +77,22 @@ router.get("/id/:idCita", (req, res) => {
 // (Crea una nueva cita)
 router.post("/registro", (req, res) => {
   console.log(req.body);
-  var json = req.body;
-  var timestamp = Math.floor(Date.now() / 1000);
+  var json = req.body.cita;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "INSERT INTO cita (fechaCita, observacionCita, fkPaciente) VALUES (?, ?, ?)",
-        [json.fechaCita, json.observacionCita, json.fkPaciente],
+        "INSERT INTO cita (fechaCita, horaCita, observacionCita, fkCedula) VALUES (?, ?, ?, ?)",
+        [json.fechaCita, json.horaCita, json.observacionCita, json.fkCedula[0]],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );

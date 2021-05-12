@@ -31,7 +31,6 @@ router.get("/lista", (req, res) => {
           throw error;
         } else {
           tempConn.release();
-          console.log(result);
           res.send(result);
         }
       });
@@ -72,29 +71,31 @@ router.get("/cedula/:cedulaFisioterapeuta", (req, res) => {
 
 // (Crea una nuevo fisioterapeuta)
 router.post("/registro", (req, res) => {
-  console.log(req.body);
-  var json = req.body;
+  var json = req.body.fisioterapeuta;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "INSERT INTO fisioterapeuta (cedulaFisioterapeuta, nombre1Fisioterapeuta, nombre2Fisioterapeuta, apellido1Fisioterapeuta, apellido2Fisioterapeuta) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO fisioterapeuta (cedulaFisio, nombre1Fisio, nombre2Fisio, apellido1Fisio, apellido2Fisio, celularFisio, correoFisio, tituloFisio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
-          json.cedulaFisioterapeuta,
-          json.nombre1Fisioterapeuta,
-          json.nombre2Fisioterapeuta,
-          json.apellido1Fisioterapeuta,
-          json.apellido2Fisioterapeuta,
+          json.cedulaFisio,
+          json.nombre1Fisio,
+          json.nombre2Fisio,
+          json.apellido1Fisio,
+          json.apellido2Fisio,
+          json.celularFisio,
+          json.correoFisio,
+          json.tituloFisio,
         ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -108,29 +109,31 @@ router.post("/registro", (req, res) => {
 
 // (Actualiza la informacion de un fisioterapeuta)
 router.post("/editar", (req, res) => {
-  console.log(req.body);
-  var json = req.body;
+  var json = req.body.fisioterapeuta;
   connection.getConnection(function (error, tempConn) {
     if (error) {
       throw error;
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        "UPDATE fisioterapeuta SET nombre1Fisioterapeuta = ?, nombre2Fisioterapeuta = ?, apellido1Fisioterapeuta = ?, apellido2Fisioterapeuta = ? WHERE idFisioterapeuta = ?",
+        "UPDATE fisioterapeuta SET nombre1Fisio = ?, nombre2Fisio = ?, apellido1Fisio = ?, apellido2Fisio = ?, celularFisio = ?, correoFisio = ?, tituloFisio = ? WHERE cedulaFisio = ?",
         [
-          json.nombre1Fisioterapeuta,
-          json.nombre2Fisioterapeuta,
-          json.apellido1Fisioterapeuta,
-          json.apellido2Fisioterapeuta,
-          json.idFisioterapeuta,
+          json.nombre1Fisio,
+          json.nombre2Fisio,
+          json.apellido1Fisio,
+          json.apellido2Fisio,
+          json.celularFisio,
+          json.correoFisio,
+          json.tituloFisio,
+          json.cedulaFisio,
         ],
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
@@ -151,14 +154,14 @@ router.delete("/cedula/:cedulaFisioterapeuta", (req, res) => {
     } else {
       console.log("Conexión Exitoso");
       tempConn.query(
-        `DELETE FROM fisioterapeuta WHERE cedulaFisioterapeuta = ${cedula}`,
+        `DELETE FROM fisioterapeuta WHERE cedulaFisio = ${cedula}`,
         function (error, result) {
           if (error) {
-            res.send("Error Query");
+            res.send("failed");
             throw error;
           } else {
             tempConn.release();
-            res.send("Query Exitoso " + result);
+            res.send("success");
           }
         }
       );
