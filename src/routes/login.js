@@ -58,8 +58,9 @@ router.post("/", (req, res) => {
                       var jres = {
                         nombre1: result[0].nombre1Paciente,
                         nombre2: result[0].nombre2Paciente,
-                        apellido1: result[0].apellido1Admin,
-                        apellido2: result[0].apellido2Admin,
+                        apellido1: result[0].apellido1Paciente,
+                        apellido2: result[0].apellido2Paciente,
+                        cedula: result[0].cedulaPaciente,
                         tipo: "user",
                       };
                       res.send(jres);
